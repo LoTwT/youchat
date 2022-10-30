@@ -2,6 +2,14 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import HelloWorld from "./components/HelloWorld.vue"
+
+import fs from "fs"
+import { ipcRenderer } from "electron"
+import { onMounted } from "vue"
+onMounted(() => {
+  console.log(fs.writeFileSync)
+  console.log(ipcRenderer)
+})
 </script>
 
 <template>

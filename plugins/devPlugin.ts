@@ -37,3 +37,46 @@ export const devPlugin = (): Plugin => {
     },
   }
 }
+
+// 为 vite-plugin-optimizer 插件提供的内置模块列表
+export const getReplacer = () => {
+  const externalModules = [
+    "os",
+    "fs",
+    "path",
+    "events",
+    "child_process",
+    "crypto",
+    "http",
+    "buffer",
+    "url",
+    "better-sqlite3",
+    "knex",
+  ]
+
+  const result = {}
+
+  for (const item of externalModules) {
+    result[item] = () => ({
+      find: new RegExp(`^${item}$`),
+      code: `const ${item} = require("${item}");export { ${item} as default }`,
+    })
+  }
+
+  result["electron"] = () => {
+    const electronModules = [
+      "clipboard",
+      "ipcRenderer",
+      "nativeImage",
+      "shell",
+      "webFrame",
+    ].join(",")
+
+    return {
+      find: new RegExp(`^electron$`),
+      code: `const {${electronModules}} = require("electron");export {${electronModules}}`,
+    }
+  }
+
+  return result
+}
