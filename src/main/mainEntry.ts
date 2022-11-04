@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from "electron"
+import { CustomScheme } from "./CustomScheme"
 
 // 设置渲染进程开发者调试工具的警告，这里设置为 true 就不会再显示任何警告了。
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true"
@@ -24,5 +25,10 @@ app.whenReady().then(() => {
 
   // 打开开发者调试工具
   mainWindow.webContents.openDevTools({ mode: "undocked" })
-  mainWindow.loadURL(process.argv[2])
+
+  if (process.argv[2]) mainWindow.loadURL(process.argv[2])
+  else {
+    CustomScheme.registerScheme()
+    mainWindow.loadURL("app://index.html")
+  }
 })
